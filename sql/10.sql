@@ -9,3 +9,15 @@
  * Start with the query you created in pagila-hw1 problem 16, but add the special_features column to the output.
  * Use this query as a subquery in a select statement similar to answer to the previous problem.
  */
+
+SELECT special_feature, SUM(profit) as profit
+FROM (
+    SELECT title, UNNEST(special_features) AS special_feature, SUM(amount) AS profit
+    FROM film
+    JOIN inventory ON (film.film_id = inventory.film_id)
+    JOIN rental ON (inventory.inventory_id = rental.inventory_id)
+    JOIN payment ON (rental.rental_id = payment.rental_id)
+    GROUP BY special_feature, title
+) AS foo
+GROUP BY special_feature
+ORDER BY special_feature;
